@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "YTPlayerView.h"
+#import "YTWebView.h"
 
 // These are instances of NSString because we get them from parsing a URL. It would be silly to
 // convert these into an integer just to have to convert the URL query string value into an integer
@@ -514,7 +515,7 @@ NSString static *const kYTPlayerSyndicationRegexPattern = @"^https://tpc.googles
 
 #pragma mark - WKNavigationDelegate
 
-- (void)webView:(WKWebView *)webView
+- (void)webView:(YTWebView *)webView
 decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
 decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
   NSURLRequest *request = navigationAction.request;
@@ -533,7 +534,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
   decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation
+- (void)webView:(YTWebView *)webView didFailNavigation:(WKNavigation *)navigation
       withError:(NSError *)error {
   if (self.initialLoadingView) {
     [self.initialLoadingView removeFromSuperview];
@@ -542,7 +543,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 
 #pragma mark - WKUIDelegate
 
-- (WKWebView *)webView:(WKWebView *)webView
+- (YTWebView *)webView:(YTWebView *)webView
 createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
    forNavigationAction:(WKNavigationAction *)navigationAction
         windowFeatures:(WKWindowFeatures *)windowFeatures {
@@ -901,15 +902,15 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 
 #pragma mark - Exposed for Testing
 
-- (void)setWebView:(WKWebView *)webView {
+- (void)setWebView:(YTWebView *)webView {
   _webView = webView;
 }
 
-- (WKWebView *)createNewWebView {
+- (YTWebView *)createNewWebView {
   WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
   webViewConfiguration.allowsInlineMediaPlayback = YES;
   webViewConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
-  WKWebView *webView = [[WKWebView alloc] initWithFrame:self.bounds
+  YTWebView *webView = [[YTWebView alloc] initWithFrame:self.bounds
                                           configuration:webViewConfiguration];
   webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
   webView.scrollView.scrollEnabled = NO;
